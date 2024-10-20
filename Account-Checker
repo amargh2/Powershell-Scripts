@@ -39,9 +39,23 @@ while ($true) {
     Write-Host "Password age for $username is $($passwordAge.Days) days. Password was last set $passwordLastSet Password expires $passwordExpirationDate."
     switch ($passwordExpired) {
         True {
-                Write-Host -ForegroundColor Red "The password expired on $passwordExpirationDate. Setting password to never expire so user can log in, confirm?"
-                Set-ADUser $user -PasswordNeverExpires $true -Confirm
-                Write-Host -ForegroundColor Yellow -Object 'User password set to never expire. Check their account again when they change their password.'
+            Write-Host -ForegroundColor Red "The password expired on $passwordExpirationDate. Setting password to never expire so user can log in, confirm?"
+            $continuePrompting = $true
+            while ($continuePrompting) {
+                $input4 = Read-Host
+                switch ($input4) {
+                    'y' {
+                            Set-ADUser $user -PasswordNeverExpires $true -Confirm
+                            Write-Host -ForegroundColor Yellow -Object 'User password set to never expire. Check their account again when they change their password.'
+                            $continuePrompting = $false
+                        }
+                    'n' { 
+                            Write-Host -ForegroundColor Yellow -object 'Confirmed. Will not set password to never expire.'
+                            $continuePrompting = $false
+                        }
+                    default {'Invalid option. Enter y or n.'}
+                }
+            }
             }
             False {
                 Write-Host "Password not currently set as expired. Verifying password age and account settings..."
