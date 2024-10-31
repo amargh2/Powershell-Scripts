@@ -1,0 +1,10 @@
+# Script Synopsis: A very simple script that connects to a specified host or opens the Remote Assitence Offer Remote Assistance Prompt.
+
+# Get the name of the computer - use write-host for the color options and Read-Host reads whatever the input is.
+Write-Host -Object "Please provide the host name or IP address of the computer or press enter to enter the prompt." -ForegroundColor Green 
+
+$HostName = Read-Host
+# ternary conditional where the hostname input determines whether the advanced offer assistance prompt is opened or you connect with the specific host'
+if ($HostName -eq "") {Start-Process msra.exe -Args "/OfferRA"} else {Start-Process msra.exe -Args "/OfferRA \\$HostName"}
+
+Write-Host -Object "Opening the remote assistance app." -ForegroundColor Green
